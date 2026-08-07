@@ -1,0 +1,9 @@
+{
+  "total_sentences": 327999,
+  "total_words": 6169361,
+  "total_characters": 29411416,
+  "average_sentence_length": 18.8091,
+  "average_word_length": 3.8446,
+  "unique_token_types": 154851,
+  "type_token_ratio": 0.0251
+}
