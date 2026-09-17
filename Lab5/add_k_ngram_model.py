@@ -4,10 +4,7 @@ import random
 from pathlib import Path
 
 
-# ============================================================
 # CONFIGURATION
-# ============================================================
-
 FILE_NAME = (
     Path(__file__).resolve().parent.parent
     / "Lab1" / "output" / "indiccorp" / "indiccorp_hi_tokenized.parquet"
@@ -22,9 +19,7 @@ ADD_K = 0.3
 random.seed(42)
 
 
-# ============================================================
 # 1. READ TOKENIZED SENTENCES
-# ============================================================
 
 def load_sentences(filename, limit=100000):
     sentences = []
@@ -61,9 +56,7 @@ def load_sentences(filename, limit=100000):
     return sentences
 
 
-# ============================================================
 # 2. REPLACE WORDS NOT IN TRAINING VOCABULARY WITH <UNK>
-# ============================================================
 
 def replace_unknown_words(sentences, vocabulary):
     result = []
@@ -80,9 +73,7 @@ def replace_unknown_words(sentences, vocabulary):
     return result
 
 
-# ============================================================
 # 3. BUILD N-GRAM MODEL
-# ============================================================
 
 def build_ngram_model(sentences, n):
     ngram_counts = Counter()
@@ -109,9 +100,7 @@ def build_ngram_model(sentences, n):
     return ngram_counts, context_counts, vocabulary
 
 
-# ============================================================
 # 4. ADD-K SMOOTHING PROBABILITY
-# ============================================================
 
 def add_k_probability(ngram, ngram_counts, context_counts, vocabulary, total_tokens, k=ADD_K):
     V = len(vocabulary)
@@ -125,9 +114,7 @@ def add_k_probability(ngram, ngram_counts, context_counts, vocabulary, total_tok
     return (count_ngram + k) / (count_context + k * V)
 
 
-# ============================================================
 # 5. CALCULATE SENTENCE LOG PROBABILITY
-# ============================================================
 
 def sentence_log_probability(sentence, n, ngram_counts, context_counts, vocabulary, total_tokens, k=ADD_K):
     if n == 1:
@@ -152,9 +139,7 @@ def sentence_log_probability(sentence, n, ngram_counts, context_counts, vocabula
     return log_probability
 
 
-# ============================================================
 # 6. CALCULATE PERPLEXITY
-# ============================================================
 
 def calculate_perplexity(sentences, n, ngram_counts, context_counts, vocabulary, total_tokens, k=ADD_K):
     total_log_probability = 0.0
@@ -182,9 +167,7 @@ def calculate_perplexity(sentences, n, ngram_counts, context_counts, vocabulary,
     return math.exp(-total_log_probability / total_ngrams)
 
 
-# ============================================================
 # 7. TRAIN ONE MODEL
-# ============================================================
 
 def train_model(training_data, n):
     print("\n" + "=" * 60)
@@ -215,9 +198,7 @@ def train_model(training_data, n):
     }
 
 
-# ============================================================
 # 8. DISPLAY SAMPLE PROBABILITIES
-# ============================================================
 
 def show_sample_probabilities(models):
     print("\n")
@@ -283,9 +264,7 @@ def show_sample_probabilities(models):
     print("Probability =", probability)
 
 
-# ============================================================
 # 9. MAIN PROGRAM
-# ============================================================
 
 def main():
     print("=" * 70)
@@ -380,9 +359,7 @@ def main():
         )
 
 
-# ============================================================
 # RUN
-# ============================================================
 
 if __name__ == "__main__":
     main()
