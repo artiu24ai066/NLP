@@ -13,6 +13,12 @@ MODELS = (
     "Backward Viterbi",
     "Forward-backward Viterbi",
 )
+MODEL_FILENAMES = {
+    "Naive Bayes": "naive_bayes",
+    "Forward Viterbi": "forward_viterbi",
+    "Backward Viterbi": "backward_viterbi",
+    "Forward-backward Viterbi": "forward_backward_viterbi",
+}
 
 
 def read_data(path):
@@ -363,6 +369,26 @@ def save_metrics(path, results):
                 )
 
 
+def save_predictions(path, gold_sentences, predicted_sentences):
+    if len(gold_sentences) != len(predicted_sentences):
+        raise ValueError("Gold and predicted sentence counts do not match")
+
+    with path.open("w", encoding="utf-8", newline="") as output:
+        writer = csv.writer(output, delimiter="\t", lineterminator="\n")
+        writer.writerow(("word", "gold_tag", "predicted_tag"))
+
+        for sentence_number, (gold, predicted) in enumerate(
+            zip(gold_sentences, predicted_sentences), start=1
+        ):
+            if len(gold) != len(predicted):
+                raise ValueError(
+                    f"Prediction length mismatch in sentence {sentence_number}"
+                )
+            for (word, gold_tag), predicted_tag in zip(gold, predicted):
+                writer.writerow((word, gold_tag, predicted_tag))
+            writer.writerow(())
+
+
 def save_chart(path, tags, results, split):
     """Create a simple grouped bar chart as an SVG file."""
     left = 240
@@ -439,6 +465,8 @@ def save_report(path, summaries):
     lines.extend(
         (
             "",
+            "Word-level predictions are saved as TSV files, one file per model "
+            "and split, with each word, gold tag, and predicted tag on a row. "
             "Each split's CSV has precision, recall, F1, and support for every tag "
             "and model. The SVG chart compares per-tag F1 scores.",
             "",
@@ -488,6 +516,12 @@ def main():
             predictions = [
                 predict([word for word, _ in sentence]) for sentence in sentences
             ]
+            save_predictions(
+                args.output_dir
+                / f"{split}_{MODEL_FILENAMES[model]}_predictions.tsv",
+                sentences,
+                predictions,
+            )
             _, scores, summary = calculate_scores(sentences, predictions)
             split_metrics[model] = scores
             summaries[split][model] = summary
