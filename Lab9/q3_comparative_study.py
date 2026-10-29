@@ -1,8 +1,8 @@
 """
 Question 3: Comparative study of MEMM, CRF, Naive Bayes and HMM.
 
-Run q1_memm.py and q2_crf.py first. Then create
-assignment7_predictions.pkl containing a dictionary with these four keys:
+Run q1_memm.py and q2_crf.py first. Then place
+output/assignment7_predictions.pkl in Lab9 with these four keys:
     "naive_bayes_dev", "naive_bayes_test", "hmm_dev", "hmm_test"
 
 Each value must be a list of sentences, where each sentence is a list of
@@ -118,7 +118,7 @@ def main():
     baseline_path = OUTPUT_DIR / "assignment7_predictions.pkl"
     if not baseline_path.exists():
         raise FileNotFoundError(
-            "Create assignment7_predictions.pkl from your Assignment 7 models. "
+            f"Create {baseline_path} from your Assignment 7 models. "
             "Expected keys: naive_bayes_dev, naive_bayes_test, hmm_dev, hmm_test. "
             "Each value should be a list of predicted tag sequences."
         )
