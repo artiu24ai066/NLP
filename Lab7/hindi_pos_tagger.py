@@ -176,6 +176,15 @@ class HMMTagger:
         count = self.word_counts[tag][word]
         return math.log(count + self.smoothing) - self.emission_denominators[tag_number]
 
+# Initialize scores for every possible tag at the first word.
+# Move to the next word.
+# For every possible current tag, consider all possible preceding tags.
+# Keep the highest transition-plus-previous-score value.
+# Add the current word's emission score.
+# Repeat until the final word.
+# Include the sentence-ending probability.
+# Reconstruct the best sequence using backpointers.
+
     def predict_forward(self, words):
         """Standard left-to-right Viterbi decoding."""
         if not words:
@@ -214,6 +223,15 @@ class HMMTagger:
             path.append(backpointers[position][path[-1]])
         path.reverse()
         return [self.tags[tag_number] for tag_number in path]
+
+
+# Initialize scores at the final word using emission and sentence-ending probabilities.
+# Move backward through the sentence.
+# For each current tag, consider all possible following tags.
+# Keep the best score for the remaining suffix.
+# Include the emission probability for the current word.
+# Select the best first tag using the sentence-start probability.
+# Reconstruct the sequence by following next pointers from left to right.
 
     def predict_backward(self, words):
         """Viterbi decoding using the recurrence from right to left."""

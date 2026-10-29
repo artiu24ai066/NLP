@@ -1,0 +1,2 @@
+nltk>=3.9
+sklearn-crfsuite>=0.5.0
