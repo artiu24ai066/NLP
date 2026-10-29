@@ -2,7 +2,9 @@ from pathlib import Path
 import pickle
 from sklearn.metrics import accuracy_score, classification_report
 
-DATA_DIR = Path("Lab9/Hindi-POS-Data")
+LAB_DIR = Path(__file__).resolve().parent
+DATA_DIR = LAB_DIR / "Hindi-POS-Data"
+OUTPUT_DIR = LAB_DIR / "output"
 TRAIN_FILE = DATA_DIR / "hindi-train-pos.txt"
 DEV_FILE = DATA_DIR / "hindi-dev-pos.txt"
 TEST_FILE = DATA_DIR / "hindi-test-pos.txt"
@@ -124,6 +126,7 @@ class MEMMTagger:
 
 
 def main():
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     train = load_pos_data(TRAIN_FILE)
     dev = load_pos_data(DEV_FILE)
     test = load_pos_data(TEST_FILE)
@@ -139,11 +142,12 @@ def main():
     evaluate("MEMM - DEV", dev, dev_pred)
     evaluate("MEMM - TEST", test, test_pred)
 
-    save_predictions("memm_dev_predictions.pkl", dev_pred)
-    save_predictions("memm_test_predictions.pkl", test_pred)
-    with open("memm_model.pkl", "wb") as f:
+    save_predictions(OUTPUT_DIR / "memm_dev_predictions.pkl", dev_pred)
+    save_predictions(OUTPUT_DIR / "memm_test_predictions.pkl", test_pred)
+    model_path = OUTPUT_DIR / "memm_model.pkl"
+    with model_path.open("wb") as f:
         pickle.dump(tagger, f)
-    print("Saved trained model to memm_model.pkl")
+    print(f"Saved trained model to {model_path}")
 
 
 if __name__ == "__main__":

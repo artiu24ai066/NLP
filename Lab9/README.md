@@ -11,21 +11,25 @@ python -m pip install -r requirements.txt
 
 ## Run
 
-From the `Lab9` directory, run the three scripts in order:
+From the repository root, run the three scripts in order:
 
 ```powershell
-python 1.py
-python 2.py
-python 3.py
+python Lab9\q1_memm.py
+python Lab9\q2_crf.py
+python Lab9\q3_comparative_study.py
 ```
 
-The comparison script reuses the saved MEMM and CRF predictions instead of
-retraining them.
+All generated predictions, trained models, comparison tables, and charts are
+saved in `Lab9\output`. The comparison script reuses the saved MEMM and CRF
+predictions instead of retraining them. Before running it, place
+`assignment7_predictions.pkl` in that output directory with the four baseline
+prediction keys described in `q3_comparative_study.py`.
+
 The first two scripts can also be run on their own when only one model is needed:
 
 ```powershell
-python 1.py
-python 2.py
+python Lab9\q1_memm.py
+python Lab9\q2_crf.py
 ```
 
 `1.py` trains the MEMM using NLTK's `MaxentClassifier` (the NLTK maximum-entropy

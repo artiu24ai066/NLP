@@ -2,7 +2,9 @@ from pathlib import Path
 import pickle
 from sklearn.metrics import accuracy_score, classification_report
 
-DATA_DIR = Path("Lab9/Hindi-POS-Data")
+LAB_DIR = Path(__file__).resolve().parent
+DATA_DIR = LAB_DIR / "Hindi-POS-Data"
+OUTPUT_DIR = LAB_DIR / "output"
 TRAIN_FILE = DATA_DIR / "hindi-train-pos.txt"
 DEV_FILE = DATA_DIR / "hindi-dev-pos.txt"
 TEST_FILE = DATA_DIR / "hindi-test-pos.txt"
@@ -93,6 +95,7 @@ def sentence_features(sentence):
 
 
 def main():
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     train = load_pos_data(TRAIN_FILE)
     dev = load_pos_data(DEV_FILE)
     test = load_pos_data(TEST_FILE)
@@ -117,11 +120,12 @@ def main():
     evaluate("CRF - DEV", dev, dev_pred)
     evaluate("CRF - TEST", test, test_pred)
 
-    save_predictions("crf_dev_predictions.pkl", dev_pred)
-    save_predictions("crf_test_predictions.pkl", test_pred)
-    with open("crf_model.pkl", "wb") as f:
+    save_predictions(OUTPUT_DIR / "crf_dev_predictions.pkl", dev_pred)
+    save_predictions(OUTPUT_DIR / "crf_test_predictions.pkl", test_pred)
+    model_path = OUTPUT_DIR / "crf_model.pkl"
+    with model_path.open("wb") as f:
         pickle.dump(crf, f)
-    print("Saved trained model to crf_model.pkl")
+    print(f"Saved trained model to {model_path}")
 
 
 if __name__ == "__main__":

@@ -16,7 +16,9 @@ import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
 
-DATA_DIR = Path("Lab9/Hindi-POS-Data")
+LAB_DIR = Path(__file__).resolve().parent
+DATA_DIR = LAB_DIR / "Hindi-POS-Data"
+OUTPUT_DIR = LAB_DIR / "output"
 DEV_FILE = DATA_DIR / "hindi-dev-pos.txt"
 TEST_FILE = DATA_DIR / "hindi-test-pos.txt"
 
@@ -104,15 +106,16 @@ def load_pickle(path):
 
 
 def main():
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     dev = load_pos_data(DEV_FILE)
     test = load_pos_data(TEST_FILE)
 
-    memm_dev = load_pickle("memm_dev_predictions.pkl")
-    memm_test = load_pickle("memm_test_predictions.pkl")
-    crf_dev = load_pickle("crf_dev_predictions.pkl")
-    crf_test = load_pickle("crf_test_predictions.pkl")
+    memm_dev = load_pickle(OUTPUT_DIR / "memm_dev_predictions.pkl")
+    memm_test = load_pickle(OUTPUT_DIR / "memm_test_predictions.pkl")
+    crf_dev = load_pickle(OUTPUT_DIR / "crf_dev_predictions.pkl")
+    crf_test = load_pickle(OUTPUT_DIR / "crf_test_predictions.pkl")
 
-    baseline_path = Path("assignment7_predictions.pkl")
+    baseline_path = OUTPUT_DIR / "assignment7_predictions.pkl"
     if not baseline_path.exists():
         raise FileNotFoundError(
             "Create assignment7_predictions.pkl from your Assignment 7 models. "
@@ -152,8 +155,8 @@ def main():
         index=False, float_format=lambda x: f"{x:.4f}"
     ))
 
-    summary.to_csv("overall_model_comparison.csv", index=False)
-    per_tag.to_csv("per_tag_comparison.csv", index=False)
+    summary.to_csv(OUTPUT_DIR / "overall_model_comparison.csv", index=False)
+    per_tag.to_csv(OUTPUT_DIR / "per_tag_comparison.csv", index=False)
 
     # Overall chart: accuracy and F1 scores for all four models.
     test_summary = summary[summary["Split"] == "Test"].set_index("Model")
@@ -165,7 +168,7 @@ def main():
     plt.xlabel("Model")
     plt.xticks(rotation=0)
     plt.tight_layout()
-    plt.savefig("overall_model_comparison.png", dpi=300)
+    plt.savefig(OUTPUT_DIR / "overall_model_comparison.png", dpi=300)
     plt.show()
 
     # Per-tag F1 chart on test set.
@@ -180,14 +183,14 @@ def main():
     plt.ylim(0, 1)
     plt.xticks(rotation=45, ha="right")
     plt.tight_layout()
-    plt.savefig("pos_tag_f1_comparison.png", dpi=300)
+    plt.savefig(OUTPUT_DIR / "pos_tag_f1_comparison.png", dpi=300)
     plt.show()
 
     print("\nSaved:")
-    print("- overall_model_comparison.csv")
-    print("- per_tag_comparison.csv")
-    print("- overall_model_comparison.png")
-    print("- pos_tag_f1_comparison.png")
+    print(f"- {OUTPUT_DIR / 'overall_model_comparison.csv'}")
+    print(f"- {OUTPUT_DIR / 'per_tag_comparison.csv'}")
+    print(f"- {OUTPUT_DIR / 'overall_model_comparison.png'}")
+    print(f"- {OUTPUT_DIR / 'pos_tag_f1_comparison.png'}")
 
 
 if __name__ == "__main__":
